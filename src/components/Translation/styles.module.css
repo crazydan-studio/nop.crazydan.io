@@ -1,0 +1,41 @@
+.translationContainer {}
+
+.translationContainer>div {
+  margin-bottom: 0;
+}
+
+.translationContainer>div>ul {
+  font-size: 0.8em;
+}
+
+.translationContainer>div>ul>li {
+  opacity: 0.3;
+  transition: opacity var(--ifm-transition-fast) var(--ifm-transition-timing-default);
+}
+
+.translationContainer>div>ul>li:hover {
+  opacity: 1;
+}
+
+.translationContainer>div>div {
+  margin-top: 0 !important;
+}
+
+.translationTitleContainer {
+  --ifm-h2-font-size: 2rem;
+  margin-bottom: calc(var(--ifm-heading-vertical-rhythm-bottom) * var(--ifm-leading));
+  margin-top: calc(var(--ifm-h2-vertical-rhythm-top) * var(--ifm-leading));
+}
+
+.translation {
+  margin: 0;
+}
+
+.translation>li {
+  padding: 0px 8px;
+  line-height: 1.5;
+}
+
+.translationWaiting {
+  opacity: 0.3;
+}
