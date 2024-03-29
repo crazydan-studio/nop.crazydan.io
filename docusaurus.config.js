@@ -9,6 +9,10 @@ module.exports = {
   favicon: 'img/logo.png',
   projectName: 'nop.crazydan.io',
   organizationName: 'Crazydan Studio',
+  i18n: {
+    defaultLocale: 'zh',
+    locales: ['zh']
+  },
   themeConfig: {
     navbar: {
       title: 'Nop 开发实践',
@@ -100,12 +104,7 @@ module.exports = {
       darkTheme: require('./src/theme/prism/prismDark'),
       // https://docusaurus.io/docs/markdown-features/code-blocks#supported-languages
       // https://github.com/FormidableLabs/prism-react-renderer/blob/master/packages/generate-prism-languages/index.ts#L9-L23
-      additionalLanguages: [
-        'bash',
-        'yaml',
-        'java',
-        'latex'
-      ]
+      additionalLanguages: ['bash', 'yaml', 'java', 'latex']
     }
   },
   clientModules: [require.resolve('./src/clientModules/routeModules.ts')],
@@ -146,7 +145,11 @@ module.exports = {
     [
       require.resolve('@easyops-cn/docusaurus-search-local'),
       {
-        hashed: true
+        hashed: true,
+        indexBlog: false,
+        indexDocs: true,
+        docsRouteBasePath: '/',
+        language: ['zh']
       }
     ]
   ]

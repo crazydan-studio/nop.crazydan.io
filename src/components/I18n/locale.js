@@ -5,5 +5,5 @@ export function currentLocale() {
     i18n: { currentLocale }
   } = useDocusaurusContext();
 
-  return 'zh'; //currentLocale;
+  return currentLocale;
 }
