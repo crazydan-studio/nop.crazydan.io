@@ -149,7 +149,7 @@ module.exports = {
         indexBlog: false,
         indexDocs: true,
         docsRouteBasePath: '/',
-        language: ['zh']
+        language: ['zh', 'en']
       }
     ]
   ]
