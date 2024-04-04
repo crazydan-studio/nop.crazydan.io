@@ -1,6 +1,6 @@
 ---
-title: 开发案例
-description: 了解通过 Nop 平台开发新项目的详细过程和注意事项
+title: 一个简单示例
+description: 初步掌握通过 Nop 平台开发新项目的详细过程和注意事项
 disable_comments: true
 custom_edit_url:
 ---
