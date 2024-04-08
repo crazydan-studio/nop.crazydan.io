@@ -36,6 +36,7 @@
 }
 
 .conversationAskContent {
+  max-width: 100%;
   background-color: #95eb6c;
   padding: 8px;
   border-radius: 8px;

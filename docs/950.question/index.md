@@ -11,7 +11,7 @@ import {Conversation, Ask, Reply, Note} from '@site/src/components/Conversation'
 
 :::tip
 
-- 若你希望向该栏目补充内容，请点击该栏目底部的编辑链接，并向其 Git 仓库提交新的内容；
+- 若您希望向该栏目补充内容，请点击该栏目底部的编辑链接，并向其 Git 仓库提交新的内容；
 - 为便于搜索和查看，请务必提交包含足够信息且有价值的文字内容，不要仅提供图片；
 
 :::

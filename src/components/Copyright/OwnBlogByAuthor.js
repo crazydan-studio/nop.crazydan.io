@@ -2,11 +2,18 @@ import React from 'react';
 
 import Link from '@docusaurus/Link';
 import Admonition from '@theme/Admonition';
-import BrowserOnly from '@docusaurus/BrowserOnly';
+import { useLocation } from '@docusaurus/router';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
 import i18n from './i18n';
 
 export default function ({ owner }) {
+  const {
+    siteConfig: { url }
+  } = useDocusaurusContext();
+  const location = useLocation();
+  const link = url + location.pathname;
+
   return (
     <Admonition type="info" title={i18n('版权声明')}>
       <ul>
@@ -22,15 +29,7 @@ export default function ({ owner }) {
           >
             {i18n('署名 4.0 国际 (CC BY 4.0)')}
           </Link>
-          {i18n('，转载请注明文章来源 ')}{' '}
-          <BrowserOnly>
-            {() => {
-              const location = window.location;
-              const link = location.origin + location.pathname;
-
-              return <Link to={link}>{link}</Link>;
-            }}
-          </BrowserOnly>
+          {i18n('，转载请注明文章来源 ')} <Link to={link}>{link}</Link>;
         </li>
       </ul>
     </Admonition>
