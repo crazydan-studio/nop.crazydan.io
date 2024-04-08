@@ -29,7 +29,7 @@ export default function ({ owner }) {
           >
             {i18n('署名 4.0 国际 (CC BY 4.0)')}
           </Link>
-          {i18n('，转载请注明文章来源 ')} <Link to={link}>{link}</Link>;
+          {i18n('，转载请注明文章来源 ')} <Link to={link}>{link}</Link>
         </li>
       </ul>
     </Admonition>
