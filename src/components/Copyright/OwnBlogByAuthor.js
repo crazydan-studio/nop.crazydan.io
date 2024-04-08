@@ -6,6 +6,9 @@ import Admonition from '@theme/Admonition';
 import i18n from './i18n';
 
 export default function ({ owner }) {
+  const location = window.location;
+  const link = location.origin + location.pathname;
+
   return (
     <Admonition type="info" title={i18n('版权声明')}>
       <ul>
@@ -21,7 +24,7 @@ export default function ({ owner }) {
           >
             {i18n('署名 4.0 国际 (CC BY 4.0)')}
           </Link>
-          {i18n('，转载请注明文章来源。')}
+          {i18n('，转载请注明文章来源 ')} <Link to={link}>{link}</Link>
         </li>
       </ul>
     </Admonition>
