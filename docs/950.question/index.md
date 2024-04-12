@@ -46,4 +46,32 @@ checkout 的时候部分文件没有 checkout 成功。
 
 </Reply>
 
+<Ask>
+
+## 在 XMeta 中定义了 `mapToProp` 映射属性，但报该属性未定义
+
+该属性定义如下：
+
+```xml
+    <prop name="optionsData"
+          mapToProp="optionsComponent.data"
+          graphql:type="[Map]" />
+```
+<br/>
+异常错误码为 `nop.err.orm.model.unknown-prop`。
+
+</Ask>
+
+<Reply>
+
+在 Nop GraphQL 引擎中处理 `mapToProp` 映射属性时，
+需通过 `OrmFetcherBuilder` 构造 `OrmDependsPropFetcher` 来获取属性，
+若没有这两个 class 则会按普通属性处理，但是 `optionsData` 是虚拟属性，
+在 ORM 实体上并未定义，所以，会报属性未定义的错误。
+
+这两个 class 在 `io.github.entropy-cloud:nop-graphql-orm` 组件中，
+因此，只需要在 Maven 工程中引入该依赖即可。
+
+</Reply>
+
 </Conversation>
