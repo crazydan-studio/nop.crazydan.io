@@ -1072,7 +1072,7 @@ IObjMeta meta =
     </entity>
 ```
 
-上例表示，为 JSON 类型字段 `options` 绑定 `optionsComponent` 组件，
+上例表示，为 JSON 类型字段 `OPTIONS` 绑定 `optionsComponent` 组件，
 用于自动处理该字段的 JSON 序列化和反序列化。这样，便可以在前端直接与后端交互
 JSON 对象，而不需要在前端重复处理对 JSON 类型属性的序列化和反序列化。
 
@@ -1095,11 +1095,11 @@ JSON 对象，而不需要在前端重复处理对 JSON 类型属性的序列化
 > JSON 对象进行数据序列化和反序列化，若未指定，则默认按字符串处理。
 
 采用方式一，可以不需要新增额外属性，直接复用字段的 JSON 组件即可，
-但在该方式中，`optionsComponent` 是只读的，不能对其做写操作。
+但在该方式中，`optionsComponent` 是只读的，不能对其做修改操作。
 
 而方式二则是新增了一个映射到 JSON 字段内部结构上的属性 `optionsData`，
 对该属性进行修改时，Nop 会自动组装 JSON 对象为 `{data: ${optionsData}}`，
-并将其序列化后的字符串存入 `OPTIONS` 字段中，再读取 `optionsData`
+并将其序列化后的字符串存入 `OPTIONS` 字段中，重新读取 `optionsData`
 时，Nop 则会自动从 `OPTIONS` 字段值中提取 JSON 对象中的`data` 键值到
 `optionsData` 上。
 
@@ -1111,8 +1111,7 @@ JSON 对象，而不需要在前端重复处理对 JSON 类型属性的序列化
 实际使用发现 List 集合也是能够正常处理的。
 
 也就是，在具体的开发中，我们可以强制限定 JSON 字段的结构均采用
-`{data: {...}}` 或 `{data: [...]}` 形式，
-这样，仅需创建映射到该结构的 `data` 键值的属性即可。
+`{data: ...}` 形式，这样，仅需创建映射到该结构的 `data` 键值的属性即可。
 
 需要指出的是，属性映射除了在 XMeta 中通过 `mapToProp` 指定外，还可以在
 ORM 中通过别名 `alias` 定义：
@@ -1132,18 +1131,65 @@ JSON 的处理逻辑，使业务层能够完全专注于业务逻辑，而无需
 > 在 XMeta 中依然需要在属性 `optionsData` 上显式设置
 > `graphql:type="[Map]"`。
 
-至此，可以确定针对 JSON 类型字段的规范化使用方案（假设存在
-JSON 类型的字段 `OPTIONS`，需要在 ORM 之上的层中屏蔽其处理差异）：
+至此，可以确定针对 JSON 类型字段的规范化使用方案。这里依然假设存在
+JSON 类型的字段 `OPTIONS`，需要在 ORM 之上的层中屏蔽其处理差异：
 
 - 在 `app.orm.xml` 中，将 `OPTIONS` 的 `column#name`
   修改为 `optionsJsonText`，也即，在原始 `options` 上添加
-  `JsonText` 后缀。注：其 json 组件也会相应地更名为
-  `optionsJsonTextComponent`
-- 再新增别名 `options` 并设置其 `propPath` 为
-  `optionsJsonTextComponent.data`：
-  `<alias name="options" propPath="optionsJsonTextComponent.data"/>`
-- 在 xmeta 中，设置 `options` 属性的 `graphql:type` 为 `[Map]`：
-  `<prop name="options" ext:kind="alias" graphql:type="[Map]"/>`
+  `JsonText` 后缀（注意，其 json 组件也会相应地更名为
+  `optionsJsonTextComponent`）。再新增别名 `options`
+  并设置其 `propPath` 为 `optionsJsonTextComponent.data`：
 
-这样，从定义 ORM 模型到前端读写，都只需要面对 `options`，
+```xml title="_vfs/xxx/xxx/orm/app.orm.xml"
+<?xml version="1.0" encoding="UTF-8" ?>
+<orm xmlns:x="/nop/schema/xdsl.xdef"
+      x:schema="/nop/schema/orm/orm.xdef"
+      x:extends="_app.orm.xml"
+>
+
+  <entities>
+    <entity name="SomeEntity">
+      <columns>
+        <column name="options" x:abstract="true" />
+        <column name="optionsJsonText" x:prototype="options" />
+      </columns>
+      <aliases>
+        <alias name="options"
+                propPath="optionsJsonTextComponent.data"
+                tagSet="pub"
+                type="Object" />
+      </aliases>
+    </entity>
+  </entities>
+</orm>
+```
+
+- 在 xmeta 中，将 `options` 属性的 `graphql:type` 设置为 `[Map]`：
+
+```xml title="_vfs/xxx/xxx/SomeEntity/SomeEntity.xmeta"
+<?xml version="1.0" encoding="UTF-8" ?>
+<meta xmlns:x="/nop/schema/xdsl.xdef"
+      x:schema="/nop/schema/xmeta.xdef"
+      x:extends="_DevAppDict.xmeta"
+>
+
+  <props>
+    <prop name="options" x:override="replace"
+          ext:kind="alias"
+          graphql:type="[Map]" />
+  </props>
+</meta>
+```
+
+这样，从定义 ORM 模型到前端读写，都只需要处理 `options` 即可，
 而不需要关心该字段存放在数据库中的真实结构，也不需要了解后端如何处理该字段的转换。
+
+若是想让上述方案全局生效，则需要定制 Nop 的代码生成模板。
+不过，由于代码生成模板都是 Xpl 脚本，无法做差量定制，只能在
+delta 层对同名文件进行覆盖，可以点击
+[json-standardize-template.delta.zip](./files/json-standardize-template.delta.zip)
+下载该方案的定制模板，只需要将其解压到 codegen 模块的
+`src/main/resources/_vfs` 资源目录下即可。
+
+该模板主要对 `*.xmeta` 和 `_app.orm.xml` 的生成进行了处理以实现上述方案，
+您可以通过 `diff` 获得与 `nop-codegen` 模块中的同名文件的差异以查看改动之处。
