@@ -1192,4 +1192,121 @@ delta 层对同名文件进行覆盖，可以点击
 `src/main/resources/_vfs` 资源目录下即可。
 
 该模板主要对 `*.xmeta` 和 `_app.orm.xml` 的生成进行了处理以实现上述方案，
-您可以通过 `diff` 获得与 `nop-codegen` 模块中的同名文件的差异以查看改动之处。
+您可以通过 `diff` 获得与 `nop-codegen` 模块中的同名文件的差异以查看改动之处：
+
+```diff title="{deltaDir}/_app.orm.xml.xgen"
+@@ -5,6 +5,9 @@
+
+     <gen:DslModelToXNode model="${ormModel}" defaultXdefPath="/nop/schema/orm/orm.xdef" xpl:return="ormNode"/>
+     <c:script><![CDATA[
++        import java.util.ArrayList;
++        import io.nop.core.lang.xml.XNode;
++
+ ormNode.removeAttr('ext:extends');
+ ormNode.setAttr('xmlns:i18n-en','i18n-en');
+ ormNode.setAttr('xmlns:ref-i18n-en','ref-i18n-en');
+@@ -14,14 +17,36 @@
+ ormNode.setAttr('xmlns:ui','ui');
+ ormNode.prependBodyXml(`<x:post-extends x:override="replace"><orm-gen:DefaultPostExtends xpl:lib="/nop/orm/xlib/orm-gen.xlib" /></x:post-extends>`);
+ ormNode.childByTag('entities')?.children?.forEach(entity=>{
++      const aliases = new ArrayList();
++
+   entity.childByTag('columns')?.children?.forEach(col=>{
+-     if(col.attrCsvSet('tagSet')?.contains('del')){
++      let jsonCol = col.attrCsvSet('tagSet')?.contains('json')
++                      || col.getAttr('stdDomain') == 'json';
++
++      if(col.attrCsvSet('tagSet')?.contains('del')){
+         col.removeAttr('propId');
+         col.setAttr('x:override','remove');
+         col.setAttr('notGenCode',true);
+-     }
++      }else if(jsonCol){
++        // 对 json 字段创建别名映射到其对应的 json 组件上，
++        // 从而在 biz 层屏蔽 orm 层的实现机制
++        const name = col.getAttr('name');
++        col.setAttr('name',name+'JsonText');
++
++        const alias = XNode.make('alias');
++        alias.setAttr('displayName',col.getAttr('displayName'));
++        alias.setAttr('name',name);
++        alias.setAttr('propPath',name+'JsonTextComponent.data');
++        alias.setAttr('tagSet','pub');
++        alias.setAttr('type','Object');
++        aliases.add(alias);
++      }
+   });
++
++  if(!aliases.isEmpty()) {
++    entity.makeChild('aliases').appendChildren(aliases);
++  }
+ });
+
+ ]]></c:script>${ormNode.outerXml(false,false)}
+-</c:unit>
+\ No newline at end of file
++</c:unit>
+```
+
+```diff title="{deltaDir}/_{entityModel.shortName}.xmeta.xgen"
+@@ -60,7 +60,9 @@
+             <c:script><![CDATA[
+                 // 是否是数据库列对应的增强对象
+                 let colComp = entityModel.getComponent(col.name + "Component");
++                // json 字段不暴露给前端，采用 alias 方式屏蔽内部结构
+                 let jsonCol = colComp != null && colComp.className.$simpleClassName() == 'JsonOrmComponent'
++                if (jsonCol) continue;
+             ]]></c:script>
+             <prop name="${col.name}" displayName="${col.displayName}" propId="${col.propId}"
+                   i18n-en:displayName="${col['i18n-en:displayName']}" tagSet="${_.join(col.tagSet,',')}"
+@@ -68,7 +70,6 @@
+                   queryable="${col['ext:queryable'] ?? true}" sortable="${col['ext:sortable'] ?? true}"
+                   insertable="${xpl('meta-gen:IsColInsertable',col)}" updatable="${xpl('meta-gen:IsColUpdatable',col)}"
+                   internal="${xpl('meta-gen:IsColInternal',col)||null}"
+-                  graphql:jsonComponentProp="${jsonCol? col.name + 'Component' : null}"
+                   graphql:type="${col.primary and col.stdDataType.toString() == 'long' ? 'String':null}"
+                   ui:show="${col['ui:show']}" ui:control="${col['ui:control'] || buildColControl(col)}"
+                   biz:codeRule="${col?.tagSet?.contains('code')?entityModel.shortName+'@'+col.name:null}"
+@@ -126,6 +127,9 @@
+                 if(comp.name.endsWith("Component")){
+                     compCol = entityModel.getColumn(comp.name.$removeTail("Component"),true);
+                 }
++                // JsonOrmComponent 不暴露给前端，采用 alias 方式屏蔽内部结构
++                const jsonComp = comp.className.$simpleClassName() == 'JsonOrmComponent';
++                if (jsonComp) continue;
+             ]]></c:script>
+             <prop name="${comp.name}" displayName="${comp.displayName}"
+                   i18n-en:displayName="${comp['i18n-en:displayName']}" tagSet="${_.join(comp.tagSet,',')}"
+@@ -141,14 +145,21 @@
+             <c:script>if(alias.tagSet?.contains('not-gen')) continue;
+                 const insertable = !alias.tagSet?.contains('view');
+                 const updatable = !alias.tagSet?.contains('view');
++                const queryable = alias.tagSet?.contains('pub');
++                // 对 json 字段，需显式设置 graphql:type="[Map]"
++                // 才能在前后端直接交换 JSON 对象，否则，只能交换字符串
++                const jsonAlias = alias.propPath.endsWith('JsonTextComponent.data');
+             </c:script>
+             <prop name="${alias.name}" displayName="${alias.displayName}"
+                   i18n-en:displayName="${alias['i18n-en:displayName']}" tagSet="${_.join(alias.tagSet,',')}"
+                   ext:kind="alias" internal="${alias.tagSet?.contains('sys')}" ui:control="${alias['ui:control']}"
+-                  insertable="${insertable}" updatable="${updatable}"
++                  insertable="${insertable}" updatable="${updatable}" queryable="${queryable}"
+                   mandatory="${alias.mandatory || null}" lazy="${alias.tagSet?.contains('eager')?false:true}"
+-                  published="${alias.tagSet?.contains('not-pub') ? false : null}">
+-                <schema type="${alias.javaTypeName}"/>
++                  published="${alias.tagSet?.contains('not-pub') ? false : null}"
++                  graphql:type="${jsonAlias ? '[Map]' : null}">
++                <c:if test="${!jsonAlias}">
++                    <schema type="${alias.javaTypeName}" />
++                </c:if>
+             </prop>
+         </c:for>
+
+@@ -215,4 +226,4 @@
+     </props>
+
+     <meta-gen:GenMetaExt entityModel="${entityModel}" xpl:lib="/nop/codegen/xlib/meta-gen.xlib"/>
+-</meta>
+\ No newline at end of file
++</meta>
+```
