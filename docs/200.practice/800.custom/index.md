@@ -1283,7 +1283,7 @@ Nop 代码生成模板本身进行差量处理，因为它们都是无坐标的�
       import io.nop.core.lang.xml.XNode;
       import io.nop.codegen.XCodeGenerator;
 
-      let xplPath = 'super:' + tplResource.getPath();
+      let xplPath = 'super:' + location().getPath();
       let xpl = XCodeGenerator.loadTpl(xplPath);
       let ormNode = xpl.generateToNode($scope);
 
@@ -1325,17 +1325,17 @@ Nop 代码生成模板本身进行差量处理，因为它们都是无坐标的�
 
 - 当前脚本的输出结果需设置为 `xpl:outputMode="text"`，因为该模板的输出结果为
   xml 文本
-- `let xplPath = 'super:' + tplResource.getPath();`
-  表示取当前模板资源（对应变量名为 `tplResource`）的上一 delta 层的模板资源，
+- `let xplPath = 'super:' + location().getPath();`
+  表示取当前模板资源（通过 `location()` 得到当前代码位置信息）的上一 delta 层的模板资源，
   也就是复用 Nop 原始的生成逻辑
 - 通过 `XCodeGenerator#loadTpl` 函数可以得到指定模板的解析对象（`XplModel`），
   再调用该对象的 `#generateToNode` 方法便可得到生成结果的 `XNode` 对象
 - 在拿到原始生成结果后，便可以向该结果的 `XNode` 节点进行补充或删减操作
 - 最后，通过调用 `ormNode.outerXml(false, false)` 输出调整后的 xml 内容即可
 
-需要特别指出的是 `'super:' + tplResource.getPath()` 的运行时结果为
+需要特别指出的是 `'super:' + location().getPath()` 的运行时结果为
 `super:/_vfs/_delta/default/nop/templates/orm/{appName}-dao/src/main/resources/_vfs/{moduleId}/orm/{deltaDir}/_app.orm.xml.xgen`
-，其中，`super:` 前缀表示取后面指定 vfs（Nop 的虚拟文件系统）资源的上层
+，其中，`super:` 前缀表示取后面的指定 vfs（Nop 的虚拟文件系统）资源位置的上层
 delta 资源，在该例中，就是取当前 delta 层标识为 `default` 的上一层资源，即
 `/nop/templates/orm/{appName}-dao/src/main/resources/_vfs/{moduleId}/orm/{deltaDir}/_app.orm.xml.xgen`
 ，也就是 Nop 的原始生成模板。
@@ -1350,7 +1350,7 @@ delta 资源，在该例中，就是取当前 delta 层标识为 `default` 的�
   <c:script><![CDATA[
     import io.nop.codegen.XCodeGenerator;
 
-    let xplPath = 'super:' + tplResource.getPath();
+    let xplPath = 'super:' + location().getPath();
     let xpl = XCodeGenerator.loadTpl(xplPath);
     let targetNode = xpl.generateToNode($scope);
   ]]></c:script>
@@ -1516,3 +1516,5 @@ xlib 函数 `gen:DeltaMerge` 将其子节点的构造结果与其参数
   中指定了 `id`、`name`、`x:id`、`v:id` 为默认的节点唯一属性，在节点上未通过
   `x:unique-attr` 指定唯一属性时，将按照默认的唯一属性做节点匹配
   - 唯一属性不存在时，按标签名匹配
+- 在 Xpl 脚本内可通过内置的宏函数 `location()` 获取当前代码位置，
+  可以从中拿到当前脚本的 vfs 资源路径
