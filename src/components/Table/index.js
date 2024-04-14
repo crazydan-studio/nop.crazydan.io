@@ -22,6 +22,11 @@ export function TRow({ children }) {
   return <tr>{children}</tr>;
 }
 
-export function TCol({ children }) {
-  return <td className={clsx(styles.tableColumn)}>{children}</td>;
+export function TCol({ children, id }) {
+  return (
+    <td id={id} className={clsx(styles.tableColumn)}>
+      {children}
+      {id && <a href={'#' + id} class="hash-link"></a>}
+    </td>
+  );
 }
