@@ -9,60 +9,6 @@ import Header from '@site/docs/\_header.md';
 
 <Header />
 
-## 注意事项 {#notes}
-
-- `io.nop.xlang.delta.DeltaMerger` 执行 `x-extends` 算法，
-  `io.nop.xlang.delta.DeltaDiffer` 执行 `x-diff` 算法，二者互为逆运算
-- 可以通过实现 `IResourceNamespaceHandler` 的方式，
-  自定义资源加载接口，从而实现对不同组织结构和方式的资源的加载
-  - 在资源路径前添加前缀的方式识别，如 `delta_layer:/xx/xx/xx.xml`
-  - 调用
-    `VirtualFileSystem.instance().registerNamespaceHandler(IResourceNamespaceHandler)`
-    进行注册
-  - 通过 `io.nop.core.resource.store.VfsConfig#pathMappings`
-    可以做虚拟路径转换，将 `_vfs` 下的文件隐射到其他目录下的同名文件（相对路径一致）
-- 标准资源路径见: `docs/dev-guide/vfs/std-resource-path.md`
-- `enum` 类型的使用方式还未确定，目前只支持使用枚举类型 `enum:io.xx.xx.Type`
-- `io.nop.core.lang.eval.global.EvalGlobalRegistry#EvalGlobalRegistry`
-  中定义了在 xpl 中可引用的全局变量
-- 配置的加载逻辑在 `io.nop.config.starter.ConfigStarter#doStart`
-  中，其支持从配置中心获取配置。可以通过激活的 profile 名称，创建不同环境的配置文件，如
-  `application-dev.yaml`，其文件名为 `application-${profile}.yaml` 形式
-- 在 `io.nop.biz.dev.DevDocBizModel` 中定义了配置、全局函数、Beans、GraphQL
-  等数据的查看接口
-  - 在配置 `nop.debug` 为 `true` 时才启用
-  - 在 `/nop/biz/beans/biz-defaults.beans.xml` 中定义 Bean
-- `io.nop.xlang.initialize.RegisterModelDiscovery#discover`
-  会主动加载 `/nop/core/registry` 中的 `*.register-model.xml`
-  模型注册器，在通过 `IResourceComponentManager#loadComponentModel`
-  载入 DSL 时，将自动根据类型调用对应的加载器加载 DSL 模型
-  - 该方式比调用 `IResourceComponentManager#registerComponentModelConfig`
-    进行手工注册更具备灵活性和可扩展性
-  - `transformer` 指定模型转换器，即，从一种 DSL 模型转换到另一种 DSL 模型，
-    在调用 `IResourceComponentManager#loadComponentModel(String, String)`
-    时，由第二参数指定要转换到的目标类型，而第一个参数为源模型的路径
-  - 可以在一个注册器中注册多种模型的加载器，只是它们会被缓存在同一个 Cache 中
-- `IResourceComponentManager#loadComponentModel` 与
-  `IResourceComponentManager#parseComponentModel` 的功能相同，
-  只是前者会缓存已加载和已转换的 DSL 模型，而后者不做缓存
-- 可以通过 `x:post-extends` 在原 DSL 节点中注入多租户等扩展信息，
-  从而可以以更加灵活的方式启用或禁用某些特性。在 `x:post-extends`
-  上可通过 `x:override` 指定生成节点与当前 DSL 节点的合并策略
-  - `x:post-extends` 只能定义在 DSL 根节点下，并且是针对整个 DSL
-    做差量处理，不能定义在局部节点而对局部节点做差量。
-    注：`x:gen-extends` 可以针对任意节点做差量
-- `io.nop.xlang.expr.ExprConstants#SCOPE_VAR_DSL_ROOT`
-  等常量定义了在 DSL 编译期可访问的变量
-  - `_dsl_model` 只能在 XDef 中的 `<xdef:post-parse/>` 内访问
-- 标注了 `@ApplicationScoped` 的类，其所在模块需启用 Maven 插件
-  `org.jboss.jandex:jandex-maven-plugin`，否则，Quarkus 将不会加载该类
-- 在 `io.nop.xlang.functions.GlobalFunctions` 中定义了 xpl 可访问的函数
-- `io.nop.xlang.xdsl.DslModelHelper` 提供 DSL 模型与 XNode 的双向转换接口
-- 在 `io.nop.core.lang.json.delta.DeltaMergeHelper#buildUniqueKey`
-  中指定了 `id`、`name`、`x:id`、`v:id` 为默认的节点唯一属性，在节点上未通过
-  `x:unique-attr` 指定唯一属性时，将按照默认的唯一属性做节点匹配
-  - 唯一属性不存在时，按标签名匹配
-
 ## `XCodeGenerator` 的阶段构建 {#code-gen-building}
 
 默认定义的 DSL 并不会生成 Java Class，若是模型结构需要以代码形式使用，
@@ -219,7 +165,7 @@ DynamicObject obj =
 需要注意的是，在 DSL 中，`x:gen-extends` 只能引用全局变量，而全局变量需要通过
 `EvalGlobalRegistry.instance().registerVariable(...)` 进行注册，并且变量名称需以
 `$` 开头。该全局变量是所有线程共享的，对于临时变量的注入，需要通过 `ThreadLocal`
-来暂存。
+来暂存。**注：应尽可能避免使用全局变量，优先保证 DSL 的无状态性，以充分利用缓存等机制。**
 
 如果需要解析得到 DSL 的 `XNode` 节点对象，则通过 `DslNodeLoader` 加载 DSL 定义即可：
 
@@ -1310,3 +1256,263 @@ delta 层对同名文件进行覆盖，可以点击
 \ No newline at end of file
 +</meta>
 ```
+
+## 定制化 Nop 内置代码生成模板 {#custom-nop-codegen-template}
+
+在 [规范化 JSON 类型字段的存取](#standardize-json-field) 章节的最后提到无法对
+Nop 代码生成模板本身进行差量处理，因为它们都是无坐标的脚本代码，不能进行定点调整。
+
+不过，我们仍然可以变换思路，从生成结果上入手，对结果做差量处理，从而实现我们的目的。
+
+依然以 JSON 规范化存取章节的需求为例，可以在 `*.xmeta` 和 `_app.orm.xml`
+的生成模板中，先拿到原始的生成结果，然后再对该结果做差量或其他处理。
+
+得益于 Nop 的 delta 资源分层机制，我们仅需要在 delta 的 `default`
+层（资源目录为 `/_vfs/_delta/default`）中对目标模板文件进行修改即可，
+不需要复制其他模板文件。
+
+先来看看如何修改 `_app.orm.xml` 的生成模板：
+
+```xml {3,10-12,44} title="/_vfs/_delta/default/nop/templates/orm/{appName}-dao/src/main/resources/_vfs/{moduleId}/orm/{deltaDir}/_app.orm.xml.xgen"
+<?xml version="1.0" encoding="UTF-8" ?>
+<c:unit xmlns:c="c"xmlns:xpl="xpl"
+  xpl:outputMode="text">
+
+  <c:script><![CDATA[
+      import java.util.ArrayList;
+      import io.nop.core.lang.xml.XNode;
+      import io.nop.codegen.XCodeGenerator;
+
+      let xplPath = 'super:' + tplResource.getPath();
+      let xpl = XCodeGenerator.loadTpl(xplPath);
+      let ormNode = xpl.generateToNode($scope);
+
+      ormNode.childByTag('entities')?.children?.forEach(entity => {
+        const aliases = new ArrayList();
+
+        entity.childByTag('columns')?.children?.forEach(col => {
+          let jsonCol = !col.attrCsvSet('tagSet')?.contains('del')
+                          && (col.attrCsvSet('tagSet')?.contains('json')
+                              || col.getAttr('stdDomain') == 'json');
+          if (jsonCol) {
+            // 对 json 字段创建别名映射到其对应的 json 组件上，
+            // 从而在 biz 层屏蔽 orm 层的实现机制
+            const name = col.getAttr('name');
+            col.setAttr('name', name + 'JsonText');
+
+            const alias = XNode.make('alias');
+            alias.setAttr('displayName', col.getAttr('displayName'));
+            alias.setAttr('name', name);
+            alias.setAttr('propPath', name + 'JsonTextComponent.data');
+            alias.setAttr('tagSet', 'pub');
+            alias.setAttr('type', 'Object');
+
+            aliases.add(alias);
+          }
+        });
+
+        if (!aliases.isEmpty()) {
+          entity.makeChild('aliases').appendChildren(aliases);
+        }
+      });
+    ]]></c:script>
+
+  ${ormNode.outerXml(false, false)}
+</c:unit>
+```
+
+这里需要注意以下节点：
+
+- 当前脚本的输出结果需设置为 `xpl:outputMode="text"`，因为该模板的输出结果为
+  xml 文本
+- `let xplPath = 'super:' + tplResource.getPath();`
+  表示取当前模板资源（对应变量名为 `tplResource`）的上一 delta 层的模板资源，
+  也就是复用 Nop 原始的生成逻辑
+- 通过 `XCodeGenerator#loadTpl` 函数可以得到指定模板的解析对象（`XplModel`），
+  再调用该对象的 `#generateToNode` 方法便可得到生成结果的 `XNode` 对象
+- 在拿到原始生成结果后，便可以向该结果的 `XNode` 节点进行补充或删减操作
+- 最后，通过调用 `ormNode.outerXml(false, false)` 输出调整后的 xml 内容即可
+
+需要特别指出的是 `'super:' + tplResource.getPath()` 的运行时结果为
+`super:/_vfs/_delta/default/nop/templates/orm/{appName}-dao/src/main/resources/_vfs/{moduleId}/orm/{deltaDir}/_app.orm.xml.xgen`
+，其中，`super:` 前缀表示取后面指定 vfs（Nop 的虚拟文件系统）资源的上层
+delta 资源，在该例中，就是取当前 delta 层标识为 `default` 的上一层资源，即
+`/nop/templates/orm/{appName}-dao/src/main/resources/_vfs/{moduleId}/orm/{deltaDir}/_app.orm.xml.xgen`
+，也就是 Nop 的原始生成模板。
+
+接下来，再看看 `*.xmeta` 的生成模板的修改方式：
+
+```xml {3,8-10,13-15,} title="/_vfs/_delta/default/nop/templates/meta/src/main/resources/_vfs/{moduleId}/model/{!entityModel.notGenCode}{entityModel.shortName}/{deltaDir}/_{entityModel.shortName}.xmeta.xgen"
+<?xml version="1.0" encoding="UTF-8" ?>
+<c:unit xmlns:c="c" xmlns:gen="gen" xmlns:xpl="xpl"
+  xpl:outputMode="text">
+
+  <c:script><![CDATA[
+    import io.nop.codegen.XCodeGenerator;
+
+    let xplPath = 'super:' + tplResource.getPath();
+    let xpl = XCodeGenerator.loadTpl(xplPath);
+    let targetNode = xpl.generateToNode($scope);
+  ]]></c:script>
+
+  <gen:DeltaMerge targetNode="${targetNode}"
+                  xpl:return="metaNode"
+                  xpl:lib="/xxx/xxx/xlib/gen.xlib">
+    <meta>
+      <props>
+        <!-- json 字段不暴露给前端（直接移除），采用 alias 方式屏蔽内部结构 -->
+        <c:for var="col" items="${entityModel.columns}">
+          <c:script><![CDATA[
+            let colComp = entityModel.getComponent(col.name + "Component");
+            let jsonCol =
+                  colComp != null
+                  && colComp.className.$simpleClassName()
+                      == 'JsonOrmComponent'
+          ]]></c:script>
+          <c:if test="${jsonCol}">
+            <prop name="${col.name}" x:override="remove" />
+          </c:if>
+        </c:for>
+        <!-- JsonOrmComponent 不暴露给前端（直接移除），采用 alias 方式屏蔽内部结构 -->
+        <c:for var="comp" items="${entityModel.components}">
+          <c:script><![CDATA[
+              if(comp.tagSet?.contains('not-gen')) continue;
+              const jsonComp =
+                      comp.className.$simpleClassName()
+                        == 'JsonOrmComponent';
+          ]]></c:script>
+          <c:if test="${jsonComp}">
+            <prop name="${comp.name}" x:override="remove" />
+          </c:if>
+        </c:for>
+
+        <c:for var="alias" items="${entityModel.aliases}">
+          <c:script><![CDATA[
+            if(alias.tagSet?.contains('not-gen')) continue;
+
+            const queryable = alias.tagSet?.contains('pub');
+            // 对 json 字段，需显式设置 graphql:type="[Map]"
+            // 才能在前后端直接交换 JSON 对象，否则，只能交换字符串
+            const jsonAlias = alias.propPath.endsWith('JsonTextComponent.data');
+          ]]></c:script>
+          <prop name="${alias.name}"
+                queryable="${queryable}"
+                graphql:type="${jsonAlias ? '[Map]' : null}">
+            <c:if test="${jsonAlias}">
+              <schema x:override="remove" />
+            </c:if>
+          </prop>
+        </c:for>
+      </props>
+    </meta>
+  </gen:DeltaMerge>
+
+  ${metaNode.outerXml(false, false)}
+</c:unit>
+```
+
+与 `_app.orm.xml` 生成模板的改造不同，对 `*.xmeta`
+生成模板的改造是采用 DSL 差量合并机制，而不是在代码中遍历修改节点。
+
+xlib 函数 `gen:DeltaMerge` 将其子节点的构造结果与其参数
+`targetNode` 做 `XNode` 合并，再将合并结果返回给变量
+`metaNode`（`xpl:return="metaNode"`），最后，调用
+`metaNode.outerXml(false, false)` 以输出最终的差量合并结果。
+
+以下为 `gen:DeltaMerge` 函数的实现：
+
+```xml {17,24} title="/xxx/xxx/xlib/gen.xlib"
+<?xml version="1.0" encoding="UTF-8" ?>
+<lib xmlns:x="/nop/schema/xdsl.xdef" xmlns:c="c"
+      x:schema="/nop/schema/xlib.xdef">
+
+  <tags>
+    <DeltaMerge outputMode="none">
+      <attr name="targetNode" type="io.nop.core.lang.xml.XNode" />
+
+      <slot name="default" outputMode="node" />
+
+      <source>
+        <c:script><![CDATA[
+          import io.nop.xlang.delta.DeltaMerger;
+          import io.nop.xlang.xmeta.SchemaLoader;
+          import io.nop.xlang.xdsl.XDslKeys;
+
+          let deltaNode = eval_node(slot_default).child(0);
+
+          let xdefPath = targetNode.getAttr('x:schema');
+          let xdef = SchemaLoader.loadXDefinition(xdefPath);
+          let keys = XDslKeys.of(targetNode);
+
+          let merger = new DeltaMerger(keys);
+          merger.merge(targetNode, deltaNode, xdef.getRootNode(), false);
+
+          return targetNode;
+        ]]></c:script>
+      </source>
+    </DeltaMerge>
+  </tags>
+</lib>
+```
+
+> 注意，`DeltaMerger#merge` 的合并结果不会主动删除 `x:override="remove"`
+> 的节点，需要参考 `XDslValidator#clean` 的实现自行处理。
+> 当然，也可以不用处理这些节点，在运行时的 DSL 中也会被移自动除掉。
+
+至此，我们通过两种实现方式，以最小化改造，完成了对 Nop 代码生成模板的定制。
+当然，二者本质上是一样的，都是在原始生成结果上做定制处理，
+因此，这一般仅针对生成结果为 xml 的情况，对于 java 代码等普通文本是没有合适的定制方案的。
+
+## 注意事项 {#notes}
+
+- `io.nop.xlang.delta.DeltaMerger` 执行 `x-extends` 算法，
+  `io.nop.xlang.delta.DeltaDiffer` 执行 `x-diff` 算法，二者互为逆运算
+- 可以通过实现 `IResourceNamespaceHandler` 的方式，
+  自定义资源加载接口，从而实现对不同组织结构和方式的资源的加载
+  - 在资源路径前添加前缀的方式识别，如 `delta_layer:/xx/xx/xx.xml`
+  - 调用
+    `VirtualFileSystem.instance().registerNamespaceHandler(IResourceNamespaceHandler)`
+    进行注册
+  - 通过 `io.nop.core.resource.store.VfsConfig#pathMappings`
+    可以做虚拟路径转换，将 `_vfs` 下的文件隐射到其他目录下的同名文件（相对路径一致）
+- 标准资源路径见: `docs/dev-guide/vfs/std-resource-path.md`
+- `enum` 类型的使用方式还未确定，目前只支持使用枚举类型 `enum:io.xx.xx.Type`
+- `io.nop.core.lang.eval.global.EvalGlobalRegistry#EvalGlobalRegistry`
+  中定义了在 xpl 中可引用的全局变量
+- 配置的加载逻辑在 `io.nop.config.starter.ConfigStarter#doStart`
+  中，其支持从配置中心获取配置。可以通过激活的 profile 名称，创建不同环境的配置文件，如
+  `application-dev.yaml`，其文件名为 `application-${profile}.yaml` 形式
+- 在 `io.nop.biz.dev.DevDocBizModel` 中定义了配置、全局函数、Beans、GraphQL
+  等数据的查看接口
+  - 在配置 `nop.debug` 为 `true` 时才启用
+  - 在 `/nop/biz/beans/biz-defaults.beans.xml` 中定义 Bean
+- `io.nop.xlang.initialize.RegisterModelDiscovery#discover`
+  会主动加载 `/nop/core/registry` 中的 `*.register-model.xml`
+  模型注册器，在通过 `IResourceComponentManager#loadComponentModel`
+  载入 DSL 时，将自动根据类型调用对应的加载器加载 DSL 模型
+  - 该方式比调用 `IResourceComponentManager#registerComponentModelConfig`
+    进行手工注册更具备灵活性和可扩展性
+  - `transformer` 指定模型转换器，即，从一种 DSL 模型转换到另一种 DSL 模型，
+    在调用 `IResourceComponentManager#loadComponentModel(String, String)`
+    时，由第二参数指定要转换到的目标类型，而第一个参数为源模型的路径
+  - 可以在一个注册器中注册多种模型的加载器，只是它们会被缓存在同一个 Cache 中
+- `IResourceComponentManager#loadComponentModel` 与
+  `IResourceComponentManager#parseComponentModel` 的功能相同，
+  只是前者会缓存已加载和已转换的 DSL 模型，而后者不做缓存
+- 可以通过 `x:post-extends` 在原 DSL 节点中注入多租户等扩展信息，
+  从而可以以更加灵活的方式启用或禁用某些特性。在 `x:post-extends`
+  上可通过 `x:override` 指定生成节点与当前 DSL 节点的合并策略
+  - `x:post-extends` 只能定义在 DSL 根节点下，并且是针对整个 DSL
+    做差量处理，不能定义在局部节点而对局部节点做差量。
+    注：`x:gen-extends` 可以针对任意节点做差量
+- `io.nop.xlang.expr.ExprConstants#SCOPE_VAR_DSL_ROOT`
+  等常量定义了在 DSL 编译期可访问的变量
+  - `_dsl_model` 只能在 XDef 中的 `<xdef:post-parse/>` 内访问
+- 标注了 `@ApplicationScoped` 的类，其所在模块需启用 Maven 插件
+  `org.jboss.jandex:jandex-maven-plugin`，否则，Quarkus 将不会加载该类
+- 在 `io.nop.xlang.functions.GlobalFunctions` 中定义了 xpl 可访问的函数
+- `io.nop.xlang.xdsl.DslModelHelper` 提供 DSL 模型与 XNode 的双向转换接口
+- 在 `io.nop.core.lang.json.delta.DeltaMergeHelper#buildUniqueKey`
+  中指定了 `id`、`name`、`x:id`、`v:id` 为默认的节点唯一属性，在节点上未通过
+  `x:unique-attr` 指定唯一属性时，将按照默认的唯一属性做节点匹配
+  - 唯一属性不存在时，按标签名匹配
