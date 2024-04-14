@@ -1505,9 +1505,6 @@ xlib 函数 `gen:DeltaMerge` 将其子节点的构造结果与其参数
   - `x:post-extends` 只能定义在 DSL 根节点下，并且是针对整个 DSL
     做差量处理，不能定义在局部节点而对局部节点做差量。
     注：`x:gen-extends` 可以针对任意节点做差量
-- `io.nop.xlang.expr.ExprConstants#SCOPE_VAR_DSL_ROOT`
-  等常量定义了在 DSL 编译期可访问的变量
-  - `_dsl_model` 只能在 XDef 中的 `<xdef:post-parse/>` 内访问
 - 标注了 `@ApplicationScoped` 的类，其所在模块需启用 Maven 插件
   `org.jboss.jandex:jandex-maven-plugin`，否则，Quarkus 将不会加载该类
 - 在 `io.nop.xlang.functions.GlobalFunctions` 中定义了 xpl 可访问的函数
@@ -1516,5 +1513,3 @@ xlib 函数 `gen:DeltaMerge` 将其子节点的构造结果与其参数
   中指定了 `id`、`name`、`x:id`、`v:id` 为默认的节点唯一属性，在节点上未通过
   `x:unique-attr` 指定唯一属性时，将按照默认的唯一属性做节点匹配
   - 唯一属性不存在时，按标签名匹配
-- 在 Xpl 脚本内可通过内置的宏函数 `location()` 获取当前代码位置，
-  可以从中拿到当前脚本的 vfs 资源路径
