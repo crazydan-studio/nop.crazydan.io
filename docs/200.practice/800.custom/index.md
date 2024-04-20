@@ -1276,7 +1276,7 @@ Nop 代码生成模板本身进行差量处理，因为它们都是无坐标的�
 ```xml {3,10-12,44} title="/_vfs/_delta/default/nop/templates/orm/{appName}-dao/src/main/resources/_vfs/{moduleId}/orm/{deltaDir}/_app.orm.xml.xgen"
 <?xml version="1.0" encoding="UTF-8" ?>
 <c:unit xmlns:c="c"xmlns:xpl="xpl"
-  xpl:outputMode="text">
+  xpl:outputMode="xml">
 
   <c:script><![CDATA[
       import java.util.ArrayList;
@@ -1323,7 +1323,7 @@ Nop 代码生成模板本身进行差量处理，因为它们都是无坐标的�
 
 这里需要注意以下几点：
 
-- 当前脚本的输出结果需设置为 `xpl:outputMode="text"`，因为该模板的输出结果为
+- 当前脚本的输出结果需设置为 `xpl:outputMode="xml"`，因为该模板的输出结果为
   xml 文本
 - `let xplPath = 'super:' + location().getPath();`
   表示取当前模板资源（通过 `location()` 得到当前代码位置信息）的上一 delta 层的模板资源，
@@ -1345,7 +1345,7 @@ delta 资源，在该例中，就是取当前 delta 层标识为 `default` 的�
 ```xml {3,8-10,13-15,} title="/_vfs/_delta/default/nop/templates/meta/src/main/resources/_vfs/{moduleId}/model/{!entityModel.notGenCode}{entityModel.shortName}/{deltaDir}/_{entityModel.shortName}.xmeta.xgen"
 <?xml version="1.0" encoding="UTF-8" ?>
 <c:unit xmlns:c="c" xmlns:gen="gen" xmlns:xpl="xpl"
-  xpl:outputMode="text">
+  xpl:outputMode="xml">
 
   <c:script><![CDATA[
     import io.nop.codegen.XCodeGenerator;
