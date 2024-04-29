@@ -38,7 +38,7 @@ module.exports = {
         },
         {
           label: '开源社区',
-          href: 'https://nop-platform.gitee.io',
+          href: 'https://nop-platform.github.io',
           position: 'right'
         },
         {
