@@ -18,8 +18,9 @@ Nop 平台及社区相关资源：
 
 - [可逆计算理论](https://zhuanlan.zhihu.com/p/64004026)
   - [知乎专栏](https://www.zhihu.com/column/reversible-computation)
-- [Nop 源码](https://gitee.com/canonical-entropy/nop-entropy)
+- [Nop 源码 (@Gitee)](https://gitee.com/canonical-entropy/nop-entropy)
   - [@Github](https://github.com/entropy-cloud/nop-entropy)
-- [Nop 开源社区](https://nop-platform.gitee.io)
+- [Nop 开源社区](https://nop-platform.github.io)
 - Nop 第三方资源
-  - [Nop 组件包仓库](https://nop.repo.crazydan.io)：[备用仓库](https://crazydan-studio.github.io/nop-repo)
+  - [Nop 组件包仓库](https://nop.repo.crazydan.io)
+    ([备用地址](https://crazydan-studio.github.io/nop-repo))：直接可用的 Maven 仓库，无需在本地编译源码。详细使用说明请见站点首页
