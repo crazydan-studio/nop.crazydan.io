@@ -124,4 +124,68 @@ checkout 的时候部分文件没有 checkout 成功。
 
 </Reply>
 
+<Ask>
+
+## Nop 的数据权限使用
+
+</Ask>
+
+<Reply>
+
+数据权限做了不兼容的变更，`role-auth` 的 `roleId` 属性改成了 `roleIds`, 允许多个角色使用同样的数据权限项。
+具体参见 [auth.md](https://gitee.com/canonical-entropy/nop-entropy/blob/master/docs/dev-guide/auth/auth.md)。
+
+有时系统会存在动态赋权的情况。比如一个人设置了将某个表中部分记录开放给指定的人员等。
+一般这种特殊权限相关的内容都是明确的业务使用场景，可以在 xbiz 中通过动态生成 filter 来实现。
+但是有时这种情况很多或者规则比较一致，不想在每个对象中去编写，那么也可以在数据权限层面统一处理。
+
+`data-auth.xml` 配置中支持 `role-decider` 配置，它可以动态确定当前用户所对应的角色集合，从而选择不同的过滤条件。
+
+```xml
+<data-auth>
+  <role-decider>
+    // 根据 authObjName, userContext, svcCtx 等动态确定角色。返回角色id的集合，或者逗号分隔的角色id。
+  </role-decider>
+</data-auth>
+```
+
+- `role-decider` 返回的角色 id 集合会直接覆盖 `IUserContext` 上的角色设置。
+- 可以将一些动态决策结果缓存到 `userContext` 或者 `svcCtx` 上，避免返回查询数据库等。
+  `userContext` 的缓存是用户 session 级别，而 `svcCtx` 的缓存是 request 级别。
+
+数据权限配置提供了两个动态性：
+
+- `authObjName`：自己根据业务动态确定。
+- `dynamicRoles`：不同的用户对于不同的业务对象可以有不同的角色集合，通过 `role-decider` 来动态计算得到。
+
+`authObjName` 对应不同的业务场景，一个业务场景下会存在多个操作。
+最简单的，`get` 和 `findPage/findList` 都要收到 `data-auth` 的限制，一个业务场景下的限制条件是一样的。
+`data-auth` 的 filter 会被编译为内存中的 Predicate，在 get 的时候也会应用：
+
+- 本身如果是业务方法层面的权限过滤条件应该在 xbiz 里配置。
+- 如果是横切于多个业务方法，就是业务场景层面，这时才会进入 `data-auth`，然后用 `authObjName` 来选择业务场景。
+- 通过 `role-decider` 可以动态选择在指定业务场景中的角色。
+- 在具体的 `role-auth` 配置中，执行 `when` 条件判断，只有 `when` 检查通过，才会选择该权限条目执行。
+- 在 `filter` 和 `check` 段中可以利用 xpl 模板语言的抽象能力来处理指定场景、指定角色下的更多的权限动态过滤需求。
+
+以上几种情况应该覆盖了所有应用场景：
+
+- 通过数据库的 `NopAuthRoleDataAuth` 实体可以在线配置数据权限
+- 在线配置时为避免出现安全性问题，filter 段只能使用 `biz!filter.xlib`，名字空间是 biz。
+  `whenConfig` 配置只能使用 `biz!when.xlib` 标签库中定义的标签。
+- `whenConfig` 可以直接配置标签名，比如 `biz:WhenAdmin` 或者 `<biz:WhenXX type='1' />`
+
+</Reply>
+
+<Reply>
+
+- 数据权限对外的抽象是一个动态 filter：`filter = authFilter(authObjName, roleId, context)`。
+- 架构的作用是实现线性化分解：`filter = loader(authObjName, roleId)(authObjName, roleId, context)`，
+  参见[从张量积看低代码平台的设计](https://mp.weixin.qq.com/s/BFCTN73pH8ZZID3Dukhx3Q)。
+- 不能被线性化的部分一般是具体业务相关，直接在 xpl 标签里定义业务相关的标签来解决。
+  比如增加额外的配置表，这里可以读取配置表中的数据，最终生成过滤条件等。`when` 配置用于从多个权限配置中动态选择一个。
+  选择时先按照 `priority` 排序，选择第一个满足条件的权限项。
+
+</Reply>
+
 </Conversation>
