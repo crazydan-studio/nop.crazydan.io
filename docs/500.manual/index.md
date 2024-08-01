@@ -36,7 +36,7 @@ import Header from '@site/docs/\_header.md';
 
 <!-- -->
 
-<TRow><TCol id="xpl-var-dsl-model"> \_dsl_model </TCol>
+<TRow><TCol id="xpl-var-dsl-model"> _dsl_model </TCol>
 
 <TCol> 解析 DSL 文件得到的 Java 模型对象 </TCol><TCol>
 
@@ -56,7 +56,7 @@ import Header from '@site/docs/\_header.md';
 
 <!-- -->
 
-<TRow><TCol id="xpl-var-dsl-root"> \_dsl_root </TCol>
+<TRow><TCol id="xpl-var-dsl-root"> _dsl_root </TCol>
 
 <TCol> 当前已解析 DSL 的根节点 </TCol><TCol>
 
