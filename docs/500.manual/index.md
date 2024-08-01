@@ -12,17 +12,13 @@ import Header from '@site/docs/\_header.md';
 
 ## Xpl 上下文内置变量 {#xpl-vars}
 
-<Table head={['属性名', '属性说明', '值类型', '使用范围', '备注']}>
+<Table head={['属性', '属性名', '值类型', '使用范围', '备注']}>
 
-<TRow><TCol id="xpl-var-location">
+<!-- -->
 
-`location()`
+<TRow><TCol id="xpl-var-location"> location() </TCol>
 
-</TCol><TCol>
-
-当前执行代码所在的位置信息
-
-</TCol><TCol>
+<TCol> 当前执行代码所在的位置信息 </TCol><TCol>
 
 `SourceLocation`
 
@@ -38,15 +34,11 @@ import Header from '@site/docs/\_header.md';
 
 </TCol></TRow>
 
-<TRow><TCol id="xpl-var-dsl-model">
+<!-- -->
 
-`_dsl_model`
+<TRow><TCol id="xpl-var-dsl-model"> \_dsl_model </TCol>
 
-</TCol><TCol>
-
-解析 DSL 文件得到的 Java 模型对象
-
-</TCol><TCol>
+<TCol> 解析 DSL 文件得到的 Java 模型对象 </TCol><TCol>
 
 `IComponentModel`
 
@@ -62,15 +54,11 @@ import Header from '@site/docs/\_header.md';
 
 </TCol></TRow>
 
-<TRow><TCol id="xpl-var-dsl-root">
+<!-- -->
 
-`_dsl_root`
+<TRow><TCol id="xpl-var-dsl-root"> \_dsl_root </TCol>
 
-</TCol><TCol>
-
-当前已解析 DSL 的根节点
-
-</TCol><TCol>
+<TCol> 当前已解析 DSL 的根节点 </TCol><TCol>
 
 `XNode`
 
