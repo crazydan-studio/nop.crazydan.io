@@ -24,9 +24,9 @@ export function TRow({ children }) {
 
 export function TCol({ children, id }) {
   return (
-    <td id={id} className={clsx(styles.tableColumn)}>
+    <td id={id} className={clsx(styles.tableColumn, id && styles.tableCellWithId)}>
+      {id && <a href={'#' + id}  className={clsx(styles.tableCellHashLink, 'hash-link')}></a>}
       {children}
-      {id && <a href={'#' + id} class="hash-link"></a>}
     </td>
   );
 }

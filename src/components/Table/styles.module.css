@@ -1,3 +1,11 @@
-.tableColumn > * {
+.tableColumn>* {
   margin: 0;
+}
+
+.tableCellWithId {
+  text-wrap: nowrap;
+}
+
+.tableCellHashLink {
+  opacity: 1;
 }
