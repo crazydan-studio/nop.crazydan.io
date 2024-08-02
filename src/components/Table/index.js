@@ -19,14 +19,47 @@ export function Table({ children, head }) {
 }
 
 export function TRow({ children }) {
-  return <tr>{children}</tr>;
+  const desc = [];
+  const other = [];
+  [].concat(children).forEach((child) => {
+    if (child.props.mdxType === 'TDesc') {
+      desc.push(child);
+    } else {
+      other.push(child);
+    }
+  });
+
+  return (
+    <>
+      <tr>{other}</tr>
+      {desc.length > 0 && (
+        <tr className={clsx(styles.tableRowDesc)}>
+          <td colSpan={other.length} className={clsx(styles.tableCellDesc)}>
+            {desc}
+          </td>
+        </tr>
+      )}
+    </>
+  );
 }
 
 export function TCol({ children, id }) {
   return (
-    <td id={id} className={clsx(styles.tableColumn, id && styles.tableCellWithId)}>
-      {id && <a href={'#' + id}  className={clsx(styles.tableCellHashLink, 'hash-link')}></a>}
+    <td
+      id={id}
+      className={clsx(styles.tableColumn, id && styles.tableCellWithId)}
+    >
+      {id && (
+        <a
+          href={'#' + id}
+          className={clsx(styles.tableCellHashLink, 'hash-link')}
+        ></a>
+      )}
       {children}
     </td>
   );
+}
+
+export function TDesc({ children }) {
+  return <>{children}</>;
 }

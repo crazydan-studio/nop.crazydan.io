@@ -9,3 +9,15 @@
 .tableCellHashLink {
   opacity: 1;
 }
+
+.tableRowDesc {
+  background-color: var(--ifm-table-stripe-background);
+}
+
+.tableCellDesc {
+  padding-left: calc(3 * var(--ifm-table-cell-padding));
+}
+
+.tableCellDesc>p:last-child {
+  margin-bottom: 0;
+}
