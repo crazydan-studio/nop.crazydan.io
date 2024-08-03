@@ -3,7 +3,8 @@
 }
 
 .tableCellWithId {
-  text-wrap: nowrap;
+  word-break: break-all;
+  min-width: 120px;
 }
 
 .tableCellHashLink {
@@ -18,6 +19,6 @@
   padding-left: calc(3 * var(--ifm-table-cell-padding));
 }
 
-.tableCellDesc>p:last-child {
+.tableCellDesc>*:last-child {
   margin-bottom: 0;
 }
