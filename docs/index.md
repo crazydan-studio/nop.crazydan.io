@@ -1,5 +1,5 @@
 ---
-title: Nop 平台介绍
+title: Nop 平台入门简介
 slug: /
 description: 初步了解 Nop 平台
 sidebar_position: 1
