@@ -1463,6 +1463,71 @@ xlib 函数 `gen:DeltaMerge` 将其子节点的构造结果与其参数
 当然，二者本质上是一样的，都是在原始生成结果上做定制处理，
 因此，这一般仅针对生成结果为 xml 的情况，对于 java 代码等普通文本是没有合适的定制方案的。
 
+## 根据名称合并 Xpl 标签 {#merge-xpl-tag-by-name}
+
+> 还在整理中，以下仅为备忘内容。
+
+适用于根据名称实现动态扩展支持的场景，比如，在 XMeta 中，根据 `domain`
+名称展开特定的 `prop` 配置结构：
+
+```xml title="/nop/core/xlib/meta-gen.xlib"
+<lib>
+  <tags>
+    <GenPropForDomain outputMode="node">
+      <attr name="_dsl_root" implicit="true"/>
+
+      <source>
+        <meta>
+          <props>
+            <c:for var="propNode" items="${_dsl_root.childByTag('props').children}">
+              <c:script>
+                import io.nop.xlang.xmeta.utils.ObjMetaPropHelper;
+                const propGen = ObjMetaPropHelper.findTagForDomain(propNode);
+
+                propGen?.executeWithArgs({propNode}, $evalRt);
+              </c:script>
+            </c:for>
+          </props>
+        </meta>
+      </source>
+    </GenPropForDomain>
+  </tags>
+</lib>
+```
+
+在 `ObjMetaPropHelper#findTagForDomain` 根据 `domain`
+先找到对应的 Xpl 标签，如，`domain-csv-list`：
+
+```xml title="/nop/core/xlib/meta-prop.xlib"
+<lib>
+  <tags>
+    <domain-csv-list outputMode="node">
+      <attr name="propNode"/>
+
+      <source>
+        <prop name="${propNode.getAttr('name')}">
+          <schema type="List&lt;String>"/>
+
+          <transformIn>
+            return value?.$toCsvListString();
+          </transformIn>
+
+          <transformOut>
+            return value?.$toCsvList();
+          </transformOut>
+        </prop>
+      </source>
+    </domain-csv-list>
+  </tags>
+</lib>
+```
+
+再调用 `propGen?.executeWithArgs({propNode}, $evalRt)`，从而生成由
+`meta-prop:domain-csv-list` 构造的 `<prop />` 节点。
+
+最终，`meta-gen:GenPropForDomain` 生成的 `<meta />`
+再与 XMeta 根节点进行合并，从而实现根据名称动态查找并合并 Xpl 标签的目的。
+
 ## 注意事项 {#notes}
 
 - `io.nop.xlang.delta.DeltaMerger` 执行 `x-extends` 算法，
