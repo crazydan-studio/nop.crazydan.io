@@ -8,7 +8,16 @@ authors:
   - flytreleft
 ---
 
-[Nop](https://gitee.com/canonical-entropy/nop-entropy)
+:::tip
+
+点击链接 [Nop 平台知识库](https://chatglm.cn/share/FjL5q)
+或扫描以下二维码，可以与[智谱清言 AI](https://chatglm.cn) 进行与 Nop 平台相关的问答互动：
+
+![](/img/ai-chat-qrcode.png)
+
+:::
+
+[Nop 平台](https://gitee.com/canonical-entropy/nop-entropy)
 是以「[可逆计算](https://zhuanlan.zhihu.com/p/64004026)」为理论基础的软件开发平台，
 其为可逆计算理论的一套 Java 实现方案，由该理论提出者
 [canonical](https://www.zhihu.com/people/canonical-entropy)
