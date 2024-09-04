@@ -1,0 +1,10 @@
+{
+  "editor.tabSize": 2,
+
+  "files.encoding": "utf8",
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.autoSave": "onFocusChange",
+
+  "prettier.endOfLine": "lf"
+}
