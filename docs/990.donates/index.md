@@ -23,13 +23,29 @@ import {Table, TRow, TCol} from '@site/src/components/Table';
 
 > **注**：点击二维码可放大图片，赞助时请添加备注信息 `Nop 开发实践`。
 
-当前累积收到赞助共：**0** RMB，**0** USD。
+当前累积收到赞助共：**10** RMB，**0** USD。
 
 感谢以下朋友（个人信息已脱敏）对**《Nop 开发实践》**的赞助支持（排名不分先后）：
 
-<Table head={['赞助人', '赞助日期', '赞助途径', '赞助金额', '累积金额', '备注']}>
+<Table head={['赞助人', '赞助日期', '赞助途径', '赞助金额', '备注']}>
 
 <!-- -->
+
+<TRow><TCol> *超 </TCol><TCol>
+
+2024-09-11 13:40:11
+
+</TCol><TCol>
+
+微信支付 (收款单号: \*980557)
+
+</TCol><TCol>
+
+10 RMB
+
+</TCol><TCol>
+
+</TCol></TRow>
 
 <TRow><TCol> </TCol><TCol>
 
@@ -37,7 +53,7 @@ import {Table, TRow, TCol} from '@site/src/components/Table';
 
 </TCol><TCol>
 
-</TCol><TCol> </TCol><TCol>
+</TCol><TCol>
 
 </TCol></TRow>
 
