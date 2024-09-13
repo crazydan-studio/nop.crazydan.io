@@ -52,6 +52,24 @@ import {DataStats, DataItem, DataSum} from '@site/src/components/DataStats';
 
 <!-- -->
 
+<TRow><TCol> *语 </TCol><TCol>
+
+2024-09-13 17:25:48
+
+</TCol><TCol>
+
+微信红包 (收款单号: \*773013)
+
+</TCol><TCol>
+
+<DataItem value={8.8} unit="RMB" />
+
+</TCol><TCol>
+
+</TCol></TRow>
+
+<!-- -->
+
 <TRow><TCol> </TCol><TCol>
 
 </TCol><TCol>
