@@ -6,6 +6,7 @@ authors:
 ---
 
 import {Conversation, Ask, Reply, Note} from '@site/src/components/Conversation';
+import {NopDocLink} from '@site/docs/NopLink';
 
 > 为避免隐私泄漏，群友问答均以匿名形式组织。另外，为便于阅读和理解，部分问答内容会做相应调整。
 
@@ -133,7 +134,7 @@ checkout 的时候部分文件没有 checkout 成功。
 <Reply>
 
 数据权限做了不兼容的变更，`role-auth` 的 `roleId` 属性改成了 `roleIds`, 允许多个角色使用同样的数据权限项。
-具体参见 [auth.md](https://gitee.com/canonical-entropy/nop-entropy/blob/master/docs/dev-guide/auth/auth.md)。
+具体参见 <NopDocLink title="auth.md" path="/dev-guide/auth/auth.md" />。
 
 有时系统会存在动态赋权的情况。比如一个人设置了将某个表中部分记录开放给指定的人员等。
 一般这种特殊权限相关的内容都是明确的业务使用场景，可以在 xbiz 中通过动态生成 filter 来实现。

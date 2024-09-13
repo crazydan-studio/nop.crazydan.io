@@ -6,6 +6,7 @@ authors:
 ---
 
 import {Conversation, Ask, Reply, Note} from '@site/src/components/Conversation';
+import {NopDocLink, NopVfsLink} from '@site/docs/NopLink';
 
 > 为避免隐私泄漏，群友问答均以匿名形式组织。另外，为便于阅读和理解，部分问答内容会做相应调整。
 
@@ -142,8 +143,7 @@ Delta 需要一个预定义的**坐标系**作为参照物，Delta 只有在同�
 可逆计算的计算模式 `App = Tree x-extends Tree<Tree>`，
 `Generator` 作为 AST 抽象语法树也是一个 Tree 结构。
 所以业务逻辑只要领域化之后，也是可以定义有意义的差量修正。
-Nop 平台中可以通过
-[task](https://Gitee.com/canonical-entropy/nop-entropy/blob/master/nop-xdefs/src/main/resources/_vfs/nop/schema/task/task.xdef)
+Nop 平台中可以通过 <NopVfsLink title="task" module="nop-xdefs" path="/nop/schema/task/task.xdef" />
 或者 workflow 抽象来进行。
 另外在平时实现代码生成器的时候我们会使用 xpl 标签库，标签库中的每个标签函数可以被单独定制。
 
@@ -170,9 +170,7 @@ Nop 平台中可以通过
 
 <Reply>
 
-规则引擎参见
-https://Gitee.com/canonical-entropy/nop-entropy/blob/master/nop-xdefs/src/main/resources/_vfs/nop/schema/rule.xdef
-。
+规则引擎参见 <NopVfsLink module="nop-xdefs" path="/nop/schema/rule.xdef" />。
 
 </Reply>
 
@@ -1285,7 +1283,7 @@ Nop 平台中所有的结构按照数学定义都具有对应的 Schema 模型�
 
 <Reply>
 
-这个参见 [validator.md](https://gitee.com/canonical-entropy/nop-entropy/blob/master/docs/dev-guide/biz/validator.md)，
+这个参见 <NopDocLink title="validator.md" path="/dev-guide/biz/validator.md" />，
 可以定义一个独立的验证模型。在 xbiz 文件里使用的时候就非常直观。
 
 `doUpdate` 有个回调 `beforeUpdate`，如果手工编程可以在这个回调函数中执行额外的逻辑。
