@@ -6,6 +6,9 @@ custom_edit_url:
 ---
 
 import {Table, TRow, TCol} from '@site/src/components/Table';
+import {DataStats, DataItem, DataSum} from '@site/src/components/DataStats';
+
+<DataStats>
 
 <Table head={['支付宝', '微信支付']}>
 
@@ -23,7 +26,7 @@ import {Table, TRow, TCol} from '@site/src/components/Table';
 
 > **注**：点击二维码可放大图片，赞助时请添加备注信息 `Nop 开发实践`。
 
-当前累积收到赞助共：**10** RMB，**0** USD。
+当前累积收到赞助共：<b><DataSum unit="RMB" />，<DataSum unit="USD" /></b>。
 
 感谢以下朋友（个人信息已脱敏）对**《Nop 开发实践》**的赞助支持（排名不分先后）：
 
@@ -41,11 +44,13 @@ import {Table, TRow, TCol} from '@site/src/components/Table';
 
 </TCol><TCol>
 
-10 RMB
+<DataItem value={10} unit="RMB" />
 
 </TCol><TCol>
 
 </TCol></TRow>
+
+<!-- -->
 
 <TRow><TCol> </TCol><TCol>
 
@@ -58,3 +63,5 @@ import {Table, TRow, TCol} from '@site/src/components/Table';
 </TCol></TRow>
 
 </Table>
+
+</DataStats>
