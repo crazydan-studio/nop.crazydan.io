@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 
 const Context = React.createContext();
 export function DataStats({ children }) {
@@ -14,12 +14,15 @@ export function DataStats({ children }) {
 export function DataItem({ unit, value }) {
   const { dataItems, updateDataItems } = useContext(Context);
 
-  updateDataItems(() => {
-    dataItems[unit] = dataItems[unit] || [];
-    dataItems[unit].push(value);
+  // 在组件挂载后更新共享数据
+  useEffect(() => {
+    updateDataItems(() => {
+      dataItems[unit] = dataItems[unit] || [];
+      dataItems[unit].push(value);
 
-    return dataItems;
-  });
+      return dataItems;
+    });
+  }, []);
 
   return (
     <>
