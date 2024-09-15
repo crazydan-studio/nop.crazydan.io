@@ -46,8 +46,8 @@ $ yarn build
 
 **注**：赞助时请添加备注信息 `Nop 开发实践`。
 
-详细的赞助清单请查看 [这里](https://nop.crazydan.io/docs/donates)。
+详细的赞助清单请查看[《友情赞助清单》](https://nop.crazydan.io/docs/donates)。
 
 | 支付宝 | 微信支付 |
 | -- | -- |
-| <img src="https://github.com/crazydan-studio/duzhou.crazydan.io/blob/master/static/img/donate/alipay.jpg?raw=true" width="200px"/> | <img src="https://github.com/crazydan-studio/duzhou.crazydan.io/blob/master/static/img/donate/wechat.png?raw=true" width="200px"/> |
+| <img src="https://github.com/crazydan-studio/nop.crazydan.io/blob/master/static/img/donate/alipay.jpg?raw=true" width="200px"/> | <img src="https://github.com/crazydan-studio/nop.crazydan.io/blob/master/static/img/donate/wechat.png?raw=true" width="200px"/> |
