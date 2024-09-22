@@ -4,7 +4,7 @@ const ctx = 'https://gitee.com/canonical-entropy/nop-entropy/blob/master';
 
 export function NopLink({ title, path }) {
   return (
-    <a href={ctx + path} target="_blank" rel="noopener noreferrer">
+    <a href={ctx + encodeURI(path)} target="_blank" rel="noopener noreferrer">
       {title}
     </a>
   );
