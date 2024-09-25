@@ -55,7 +55,7 @@ export function TCol({ children, id }) {
           className={clsx(styles.tableCellHashLink, 'hash-link')}
         ></a>
       )}
-      {children}
+      {typeof children === 'string' ? children.trim() : children}
     </td>
   );
 }
