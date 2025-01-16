@@ -25,6 +25,8 @@ import {DataStats, DataItem, DataSum} from '@site/src/components/DataStats';
 </Table>
 
 > **注**：点击二维码可放大图片，赞助时请添加备注信息 `Nop 开发实践`。
+>
+> **注**：若您对文章内容有任何疑问，可以搜索微信号 `crazydan0`（末尾为数字`零`）加我微信，共同**友好探讨**。
 
 当前累积收到赞助共：<b><DataSum unit="RMB" />，<DataSum unit="USD" /></b>。
 
@@ -63,6 +65,24 @@ import {DataStats, DataItem, DataSum} from '@site/src/components/DataStats';
 </TCol><TCol>
 
 <DataItem value={8.8} unit="RMB" />
+
+</TCol><TCol>
+
+</TCol></TRow>
+
+<!-- -->
+
+<TRow><TCol> *渐 </TCol><TCol>
+
+2025-01-15 23:51:23
+
+</TCol><TCol>
+
+微信支付 (收款单号: \*796530)
+
+</TCol><TCol>
+
+<DataItem value={10} unit="RMB" />
 
 </TCol><TCol>
 
