@@ -3,8 +3,8 @@ import { i18n, arg } from '@site/src/components/I18n';
 export default i18n()
   //
   .trans(['warning.title'])
-  .zh('草稿提醒')
-  .en('Draft Warning')
+  .zh('阅读提醒')
+  .en('Reading Warning')
   //
   .trans(['warning.content'])
   .zh('本文还在编辑整理中，会存在较多错误，请谨慎阅读！')
