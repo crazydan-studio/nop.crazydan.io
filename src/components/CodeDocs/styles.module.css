@@ -1,0 +1,50 @@
+[data-theme='dark']:root {
+  --code-doc-tooltip-bg-color: var(--ifm-background-color);
+  --code-doc-tooltip-arrow-border: var(--ifm-table-border-width) solid #2c2e40;
+  --code-doc-tooltip-modal-shadow: inset 1px 1px 0 0 #2c2e40, 0 3px 8px 0 #000309;
+  --code-doc-token-underline-color: rgb(86, 156, 214);
+}
+
+:root {
+  --code-doc-tooltip-bg-color: #fff;
+  --code-doc-tooltip-arrow-border: var(--ifm-table-border-width) solid var(--ifm-table-border-color);
+  --code-doc-tooltip-modal-shadow: inset 1px 1px 0 0 hsla(0, 0%, 100%, 0.5), 0 3px 8px 0 #555a64;
+  --code-doc-token-underline-color: rgb(34, 134, 58);
+}
+
+.tooltip {
+  color: unset !important;
+  background: var(--code-doc-tooltip-bg-color) !important;
+  box-shadow: var(--code-doc-tooltip-modal-shadow) !important;
+  border-radius: 6px !important;
+  z-index: 100 !important;
+  opacity: 1 !important;
+  max-width: 60%;
+  max-height: 70%;
+  overflow: hidden;
+  display: flex;
+}
+
+:global(.code-doc-token) {
+  cursor: help;
+  text-decoration: var(--code-doc-token-underline-color) wavy underline;
+}
+
+:global(.code-doc-token > .token:last-child::after),
+:global(.code-doc-token.token::after) {
+  content: "\f059";
+}
+
+.codeDoc {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.codeDocHeader {
+  text-align: center;
+}
+
+.codeDocBody {
+  overflow: auto;
+}

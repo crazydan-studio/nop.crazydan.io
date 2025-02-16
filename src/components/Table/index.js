@@ -6,13 +6,15 @@ import styles from './styles.module.css';
 export function Table({ children, head }) {
   return (
     <table>
-      <thead>
-        <tr>
-          {head.map((name) => {
-            return <th>{name}</th>;
-          })}
-        </tr>
-      </thead>
+      {head && (
+        <thead>
+          <tr>
+            {head.map((name, idx) => {
+              return <th key={idx}>{name}</th>;
+            })}
+          </tr>
+        </thead>
+      )}
       <tbody>{children}</tbody>
     </table>
   );
