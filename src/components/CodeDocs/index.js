@@ -125,8 +125,6 @@ function markCodeToken($dom, docedToken) {
       return;
     }
 
-    console.info('Token updated', tokenValue);
-
     const tokenClassName = 'code-doc-token';
     if (token.length > 1) {
       const $first = token[0];
@@ -145,6 +143,8 @@ function markCodeToken($dom, docedToken) {
         token = [$wrapper];
       }
     }
+
+    console.info('Token updated', tokenValue, token[0]);
 
     token.forEach(($t) => {
       $t.classList.add(tokenClassName);
