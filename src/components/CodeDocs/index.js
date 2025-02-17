@@ -98,6 +98,10 @@ export function Doc({ token, href, children }) {
 
 /** 确定 token 节点，并添加 tooltip 标记 */
 function markCodeToken($dom, docedToken) {
+  if (!$dom) {
+    return;
+  }
+
   const trim = ($el) => $el && ($el.innerText || '').trim();
   const $tokens = $dom.querySelectorAll('.token:not(.punctuation,.comment)');
   const tokenSize = $tokens.length;
