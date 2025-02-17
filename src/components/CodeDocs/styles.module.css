@@ -12,6 +12,13 @@
   --code-doc-token-underline-color: rgb(34, 134, 58);
 }
 
+@media (max-width: 997px) {
+  .tooltip {
+    max-width: calc(100% - 12px) !important;
+    max-height: 50% !important;
+  }
+}
+
 .tooltip {
   color: unset !important;
   background: var(--code-doc-tooltip-bg-color) !important;

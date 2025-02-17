@@ -5,7 +5,7 @@ import styles from './styles.module.css';
 
 export function Table({ children, head }) {
   return (
-    <table>
+    <table className={styles.table}>
       {head && (
         <thead>
           <tr>

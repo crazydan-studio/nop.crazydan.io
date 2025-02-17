@@ -49,6 +49,10 @@ pre.prism-code {
   max-height: 30rem;
 }
 
+pre.prism-code [class*="codeLine_"]>[class*="codeLineNumber_"] {
+  z-index: 1;
+}
+
 .plantuml-diagram {
   overflow-x: auto;
   scrollbar-width: thin;

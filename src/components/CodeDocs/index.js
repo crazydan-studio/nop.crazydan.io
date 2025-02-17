@@ -41,7 +41,6 @@ export function CodeDocs({ children }) {
         className={styles.tooltip}
         clickable
         noArrow
-        place="right"
         delayHide={0}
         render={({ content, activeAnchor }) => {
           // https://react-tooltip.com/docs/examples/render

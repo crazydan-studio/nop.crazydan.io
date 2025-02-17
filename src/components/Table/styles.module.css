@@ -1,3 +1,14 @@
+@media (max-width: 997px) {
+  /** 避免表格宽度超出页面宽度 */
+  .table {
+    display: table !important;
+    width: 100%;
+    table-layout: fixed;
+  }
+}
+
+.table {}
+
 .tableColumn>* {
   margin: 0;
 }
