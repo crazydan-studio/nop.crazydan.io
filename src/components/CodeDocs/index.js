@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 
 // https://react-tooltip.com/docs/examples/basic-examples
 import { Tooltip } from 'react-tooltip';
@@ -69,9 +69,14 @@ export function CodeDocs({ children }) {
 
 /** 在该标签内部依然使用 markdown 的代码块 */
 export function Code({ children, docedToken, ...props }) {
-  // Note: 在 ref 函数中更新 token 标记，确保组件每次更新都能够重置该标记
+  const domRef = useRef(null);
+
+  useEffect(() => {
+    markCodeToken(domRef.current, docedToken);
+  });
+
   return (
-    <div {...props} ref={($el) => $el && markCodeToken($el, docedToken)}>
+    <div {...props} ref={domRef}>
       {children}
     </div>
   );
