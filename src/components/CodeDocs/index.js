@@ -72,8 +72,11 @@ export function Code({ children, docedToken, ...props }) {
   const domRef = useRef(null);
 
   useEffect(() => {
-    console.info('Update dom ref', domRef.current);
-    markCodeToken(domRef.current, docedToken);
+    // 生产部署后，代码块会被更新两次，但 useEffect 仅会触发一次调用，
+    // 因此，采用延时更新策略，以确保代码块中的 token 被准确标注
+    setTimeout(() => {
+      markCodeToken(domRef.current, docedToken);
+    }, 500);
   });
 
   return (
