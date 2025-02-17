@@ -34,12 +34,12 @@
 
 :global(.code-doc-token) {
   cursor: help;
-  text-decoration: var(--code-doc-token-underline-color) wavy underline;
+  text-decoration: var(--code-doc-token-underline-color) solid underline;
 }
 
 :global(.code-doc-token > .token:last-child::after),
 :global(.code-doc-token.token::after) {
-  content: "\f059";
+  content: "↗";
 }
 
 .codeDoc {
