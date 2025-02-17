@@ -72,6 +72,7 @@ export function Code({ children, docedToken, ...props }) {
   const domRef = useRef(null);
 
   useEffect(() => {
+    console.info('Update dom ref', domRef.current);
     markCodeToken(domRef.current, docedToken);
   });
 
