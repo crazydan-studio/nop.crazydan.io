@@ -48,7 +48,7 @@ export function CodeDocs({ children }) {
         className={styles.tooltip}
         clickable
         noArrow
-        delayHide={100000000000000000}
+        delayHide={0}
         render={({ content, activeAnchor }) => {
           // https://react-tooltip.com/docs/examples/render
           const child = getDocChild(JSON.parse(content));
