@@ -32,6 +32,10 @@
   display: flex;
 }
 
+.tooltip :global(.react-tooltip-content-wrapper) {
+  width: 100%;
+}
+
 :global(.code-doc-token) {
   cursor: help;
   text-decoration: var(--code-doc-token-underline-color) solid underline;
