@@ -10,17 +10,24 @@ const TOOLTIP_ID = 'code-doc-tooltip';
 export function CodeDocs({ children }) {
   children = [].concat(children);
 
-  const docChildren = {};
+  const docChildren = [];
   children.forEach((child) => {
     const {
-      props: { token, originalType }
+      props: { originalType }
     } = child;
 
-    if (originalType == Doc && token) {
-      docChildren[token] = child;
+    if (originalType == Doc) {
+      docChildren.push(child);
     }
   });
-  const docedTokens = Object.keys(docChildren);
+
+  const getDocChild = (token) =>
+    token &&
+    docChildren.filter(
+      ({ props }) =>
+        (props.token && props.token == token.value) ||
+        (props.match && props.match(token))
+    )[0];
 
   return (
     <>
@@ -29,7 +36,7 @@ export function CodeDocs({ children }) {
           if (props.originalType === Code) {
             props = {
               ...props,
-              docedToken: (token) => docedTokens.includes(token)
+              docedToken: getDocChild
             };
           }
 
@@ -44,7 +51,7 @@ export function CodeDocs({ children }) {
         delayHide={0}
         render={({ content, activeAnchor }) => {
           // https://react-tooltip.com/docs/examples/render
-          const child = docChildren[content];
+          const child = getDocChild(JSON.parse(content));
           if (!child) {
             return null;
           }
@@ -54,7 +61,7 @@ export function CodeDocs({ children }) {
           return (
             <div className={styles.codeDoc}>
               <h2 className={styles.codeDocHeader}>
-                <a href={props.href}>#{props.token}</a>
+                <a href={props.href}>#{props.token || props.title}</a>
               </h2>
               <div className={styles.codeDocBody}>
                 <Comp {...props} />
@@ -91,7 +98,7 @@ export function Code({ children, docedToken, ...props }) {
  *
  * @param {String} token 代码中需显示文档的符号
  */
-export function Doc({ token, href, children }) {
+export function Doc({ token, match, title, href, children }) {
   // TODO 在无子组件时，视为外部引用，不做显示，仅占位
   return <>{children}</>;
 }
@@ -128,7 +135,13 @@ function markCodeToken($dom, docedToken) {
 
   tokenList.forEach((token) => {
     const tokenValue = token.map((t) => t.innerText).join('');
-    if (!docedToken(tokenValue)) {
+    const types = [];
+    token.forEach((t) => {
+      t.classList.forEach((c) => c != 'token' && types.push(c));
+    });
+
+    const tooltipContent = { value: tokenValue, types };
+    if (!docedToken(tooltipContent)) {
       return;
     }
 
@@ -151,12 +164,12 @@ function markCodeToken($dom, docedToken) {
       }
     }
 
-    console.info('Token updated', tokenValue, token[0]);
+    //console.info('Token updated', tokenValue, token[0]);
 
     token.forEach(($t) => {
       $t.classList.add(tokenClassName);
       $t.setAttribute('data-tooltip-id', TOOLTIP_ID);
-      $t.setAttribute('data-tooltip-content', tokenValue);
+      $t.setAttribute('data-tooltip-content', JSON.stringify(tooltipContent));
     });
   });
 }
