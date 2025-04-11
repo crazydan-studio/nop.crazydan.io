@@ -736,6 +736,10 @@ public class WebPageProviderBizModel {
 >
 
   <loaders>
+    <!-- 在 Nop 中，是以文件名的最后两个点作为 fileType 的，
+    也就是每个资源文件默认均按两级后缀进行优先匹配，仅在二级后缀无匹配结果时，
+    才匹配一级后缀，因此，一二级后缀的匹配是与顺序无关的
+    -->
     <xdsl-loader
         fileType="web.xml"
         schemaPath="/path/to/schema/web.xdef" />
@@ -745,6 +749,9 @@ public class WebPageProviderBizModel {
   </loaders>
 </model>
 ```
+
+> 根据 `fileType` 匹配 DSL 加载器的逻辑见
+> `ResourceComponentManager#findModelTypeFromPath`。
 
 `model.name` 表示某类 DSL 模型加载器的名称，对于已缓存的 DSL 模型，
 是按以该名称作为缓存分组，在同组内的 DSL 模型均会被缓存在同一个 Cache 中。
