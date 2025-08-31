@@ -1,0 +1,318 @@
+/* stylelint-disable docusaurus/copyright-header */
+
+/**
+ * CSS files with the .module.css suffix will be treated as CSS modules
+ * and scoped locally.
+ */
+
+.heroContainer {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.backgroundGradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  z-index: -1;
+}
+
+/* 装饰性几何图形 */
+.decorationCircle1 {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 120px;
+  height: 120px;
+  border: 1px solid #ffffff;
+  border-radius: 50%;
+  opacity: 0.1;
+}
+
+.decorationCircle2 {
+  position: absolute;
+  bottom: 10%;
+  right: 10%;
+  width: 160px;
+  height: 160px;
+  border: 1px solid #ffffff;
+  border-radius: 50%;
+  opacity: 0.1;
+}
+
+.decorationPolygon {
+  position: absolute;
+  bottom: 20%;
+  left: 5%;
+  width: 100px;
+  height: 100px;
+  background-color: #ffffff;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  opacity: 0.05;
+}
+
+.heroContent {
+  width: 100%;
+  text-align: center;
+  color: #ffffff;
+  z-index: 1;
+}
+
+.heroTitle {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.heroSubtitle {
+  font-size: 1.2rem;
+  opacity: 0.8;
+  margin-bottom: 3rem;
+}
+
+.formulaCard {
+  background: linear-gradient(135deg, #ffffff, #f8fafc);
+  border-radius: 20px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  margin: 0 auto 3rem;
+  max-width: 800px;
+}
+
+.formula {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1e293b;
+  background-color: transparent;
+  border: none;
+  line-height: 1.6;
+}
+
+.xExtends {
+  color: #3b82f6;
+}
+
+.cardsContainer {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: linear-gradient(135deg, #ffffff, #f8fafc);
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  width: 380px;
+  color: #1e293b;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.cardContent {
+  margin-left: 0.93rem;
+}
+
+.cardIcon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 1rem;
+  font-size: 28px;
+}
+
+.dslIcon {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+}
+
+.deltaIcon {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.generatorIcon {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-align: left;
+}
+
+.cardSubtitle {
+  font-size: 0.9rem;
+  color: #64748b;
+  text-align: left;
+  margin-bottom: 0;
+}
+
+.featureList {
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 0.93rem;
+  text-align: left;
+}
+
+.featureList li {
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #475569;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.featureList li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: inherit;
+}
+
+.codeExample {
+  background-color: #f1f5f9;
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: #64748b;
+  text-align: left;
+}
+
+.mathExample {
+  background-color: #fef3c7;
+  border-radius: 8px;
+  padding: 0.75rem;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  color: #92400e;
+}
+
+.toolsContainer {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: start;
+}
+
+.tool {
+  background-color: #dcfce7;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #166534;
+  min-width: 70px;
+  text-align: center;
+}
+
+.footerHighlight {
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 30px;
+  padding: 1.5rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.footerText {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.footerSubtext {
+  font-size: 0.95rem;
+  opacity: 0.8;
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 996px) {
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+
+  .formula {
+    font-size: 1.5rem;
+  }
+
+  .cardsContainer {
+    gap: 1.5rem;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroContainer {
+    padding: 1rem;
+  }
+
+  .heroTitle {
+    font-size: 2rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1rem;
+  }
+
+  .formulaCard {
+    padding: 1rem;
+  }
+
+  .formula {
+    font-size: 1.2rem;
+  }
+
+  .decorationCircle1,
+  .decorationCircle2,
+  .decorationPolygon {
+    display: none;
+  }
+
+  .footerHighlight {
+    padding: 1rem 1.5rem;
+  }
+
+  .footerText {
+    font-size: 1rem;
+  }
+
+  .footerSubtext {
+    font-size: 0.85rem;
+  }
+}

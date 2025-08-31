@@ -22,6 +22,12 @@ module.exports = {
       },
       items: [
         {
+          to: 'docs/',
+          activeBasePath: 'docs',
+          label: '文档',
+          position: 'right'
+        },
+        {
           type: 'dropdown',
           label: '源代码',
           position: 'right',
@@ -125,7 +131,7 @@ module.exports = {
         blog: false,
         docs: {
           id: 'default',
-          routeBasePath: '/',
+          routeBasePath: 'docs',
           path: 'docs',
           sidebarPath: require.resolve('./docs/sidebars.js'),
           editUrl:
