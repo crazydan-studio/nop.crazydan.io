@@ -53,7 +53,7 @@ export default function Home() {
                   <li>跨 DSL 协同</li>
                 </ul>
                 <div className={styles.codeExample}>
-                  /app/entity[@name='User']/column[1]
+                  /orm/entity[@name='User']/column[@name='id']
                 </div>
               </div>
             </div>
@@ -109,20 +109,13 @@ export default function Home() {
                   </span>
                   <span className={styles.tool}>
                     <a
-                      href={useBaseUrl('/docs/manual/xlang/xdsl')}
-                      target="_blank"
-                    >
-                      XDSL
-                    </a>
-                  </span>
-                  <span className={styles.tool}>
-                    <a
                       href={useBaseUrl('/docs/manual/xlang/xpl')}
                       target="_blank"
                     >
                       Xpl
                     </a>
                   </span>
+                  <span className={styles.tool}>XScript</span>
                 </div>
               </div>
             </div>

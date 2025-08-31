@@ -202,7 +202,7 @@
   border-radius: 8px;
   padding: 0.75rem;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   color: #64748b;
   text-align: left;
 }
@@ -232,6 +232,11 @@
   color: #166534;
   min-width: 70px;
   text-align: center;
+}
+
+.tool a {
+  color: inherit;
+  text-decoration: underline;
 }
 
 .footerHighlight {
