@@ -99,9 +99,30 @@ export default function Home() {
                   <li>源码可追溯</li>
                 </ul>
                 <div className={styles.toolsContainer}>
-                  <span className={styles.tool}>XDef</span>
-                  <span className={styles.tool}>Xpl</span>
-                  <span className={styles.tool}>XScript</span>
+                  <span className={styles.tool}>
+                    <a
+                      href={useBaseUrl('/docs/manual/xlang/xdef')}
+                      target="_blank"
+                    >
+                      XDef
+                    </a>
+                  </span>
+                  <span className={styles.tool}>
+                    <a
+                      href={useBaseUrl('/docs/manual/xlang/xdsl')}
+                      target="_blank"
+                    >
+                      XDSL
+                    </a>
+                  </span>
+                  <span className={styles.tool}>
+                    <a
+                      href={useBaseUrl('/docs/manual/xlang/xpl')}
+                      target="_blank"
+                    >
+                      Xpl
+                    </a>
+                  </span>
                 </div>
               </div>
             </div>
