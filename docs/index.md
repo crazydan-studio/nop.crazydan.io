@@ -32,7 +32,7 @@ Nop 平台及社区相关资源：
   - [@Github](https://github.com/entropy-cloud/nop-entropy)
 - [Nop 开源社区](https://nop-platform.github.io)
 - Nop 第三方资源
-  - [Nop 组件包仓库](https://nop.repo.crazydan.io)
+  - [Nop 组件包仓库](https://repo.nop.crazydan.io/)
     ([备用地址](https://crazydan-studio.github.io/nop-repo))：
     直接可用的 Maven 仓库，无需在本地编译源码。详细使用说明请阅读该站点的首页内容
 

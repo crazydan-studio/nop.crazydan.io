@@ -54,7 +54,7 @@ module.exports = {
           items: [
             {
               label: 'Nop 组件包仓库（第三方）',
-              href: 'https://nop.repo.crazydan.io'
+              href: 'https://repo.nop.crazydan.io/'
             }
           ]
         }
