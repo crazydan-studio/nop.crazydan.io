@@ -42,7 +42,7 @@ export default function Home() {
                   <span>🗂</span>
                 </div>
                 <div>
-                  <h3 className={styles.cardTitle}>DSL 森林</h3>
+                  <h3 className={styles.cardTitle}>DSL 图册</h3>
                   <p className={styles.cardSubtitle}>领域坐标系</p>
                 </div>
               </div>
