@@ -6,9 +6,6 @@ custom_edit_url:
 ---
 
 import {Table, TRow, TCol} from '@site/src/components/Table';
-import {DataStats, DataItem, DataSum} from '@site/src/components/DataStats';
-
-<DataStats>
 
 <Table head={['支付宝', '微信支付']}>
 
@@ -28,11 +25,9 @@ import {DataStats, DataItem, DataSum} from '@site/src/components/DataStats';
 >
 > **注**：若您对文章内容有任何疑问，可以搜索微信号 `crazydan0`（末尾为数字`零`）加我微信，共同**友好探讨**。
 
-当前累积收到赞助共：<b><DataSum unit="RMB" />，<DataSum unit="USD" /></b>。
-
 感谢以下朋友（个人信息已脱敏）对**《Nop 开发实践》**的赞助支持（排名不分先后）：
 
-<Table head={['赞助人', '赞助日期', '赞助途径', '赞助金额', '备注']}>
+<Table head={['赞助人', '赞助日期', '赞助途径', '备注']}>
 
 <!-- -->
 
@@ -43,10 +38,6 @@ import {DataStats, DataItem, DataSum} from '@site/src/components/DataStats';
 </TCol><TCol>
 
 微信支付 (收款单号: \*980557)
-
-</TCol><TCol>
-
-<DataItem value={10} unit="RMB" />
 
 </TCol><TCol>
 
@@ -64,10 +55,6 @@ import {DataStats, DataItem, DataSum} from '@site/src/components/DataStats';
 
 </TCol><TCol>
 
-<DataItem value={8.8} unit="RMB" />
-
-</TCol><TCol>
-
 </TCol></TRow>
 
 <!-- -->
@@ -82,10 +69,6 @@ import {DataStats, DataItem, DataSum} from '@site/src/components/DataStats';
 
 </TCol><TCol>
 
-<DataItem value={10} unit="RMB" />
-
-</TCol><TCol>
-
 </TCol></TRow>
 
 <!-- -->
@@ -96,10 +79,6 @@ import {DataStats, DataItem, DataSum} from '@site/src/components/DataStats';
 
 </TCol><TCol>
 
-</TCol><TCol>
-
 </TCol></TRow>
 
 </Table>
-
-</DataStats>
