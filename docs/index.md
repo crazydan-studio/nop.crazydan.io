@@ -10,11 +10,8 @@ authors:
 
 :::tip
 
-点击链接 [Nop 平台知识库](https://chatglm.cn/share/FjL5q)
-或扫描以下二维码，可以与[智谱清言 AI](https://chatglm.cn)
-进行问答互动以了解 Nop 平台相关内容：
-
-![](/img/ai-chat-qrcode.png)
+您可以与 [DeepWiki](https://deepwiki.com/entropy-cloud/nop-entropy)
+进行问答互动（支持中文）以深入学习 Nop 平台的设计与实现。
 
 :::
 
