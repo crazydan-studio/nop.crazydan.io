@@ -11,7 +11,7 @@ cp -f "${_DIR_}/hackjs/plugin-image-zoom.js" \
 ## https://github.com/vowstar/node-plantuml-back
 ## https://plantuml.com/download
 ## https://plantuml.com/vizjs
-PLANTUML_JAR_URL='https://github.com/plantuml/plantuml/releases/download/v1.2023.13/plantuml-1.2023.13.jar'
+PLANTUML_JAR_URL='https://github.com/plantuml/plantuml/releases/download/v1.2026.1/plantuml-1.2026.1.jar'
 VIZJS_JAR_URL='http://beta.plantuml.net/j2v8_linux_x86_64-3.1.6.jar'
 PLANTUML_JAR="$(basename "${PLANTUML_JAR_URL}")"
 VIZJS_JAR="$(basename "${VIZJS_JAR_URL}")"
@@ -32,8 +32,9 @@ popd
 
 # 在 Netlify 中构建时，需本地安装 Noto 字体
 ## https://fontsource.org/fonts/noto-sans-sc
+## https://font.download/font/noto-sans-sc
 ## https://manpages.ubuntu.com/manpages/focal/en/man5/fonts-conf.5.html
-FONT_URL='https://r2.fontsource.org/fonts/noto-sans-sc@latest/download.zip'
+FONT_URL='https://font.download/dl/font/noto-sans-sc.zip'
 if [ "$HOME" = "/opt/buildhome" ]; then
     # 在 Netlify 上，只有安装的 NPM 包才会缓存，
     # 故而，只能将字体放在某个 NPM 包中以确保其能够被缓存
