@@ -19,7 +19,7 @@ import {Table, TRow, TCol} from '@site/src/components/Table';
 
 </TCol><TCol>
 
-<img src="https://studio.crazydan.org/donate/duzhou.png" style={{height: '200px'}}/>
+<img src="https://studio.crazydan.org/donate/nop.png" style={{height: '200px'}}/>
 
 </TCol></TRow>
 
