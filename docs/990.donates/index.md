@@ -7,15 +7,19 @@ custom_edit_url:
 
 import {Table, TRow, TCol} from '@site/src/components/Table';
 
-<Table head={['支付宝', '微信支付']}>
+<Table head={['支付宝', '微信支付', 'PayPal']}>
 
 <TRow><TCol>
 
-<img src="/img/donate/alipay.jpg" style={{height: '200px'}}/>
+<img src="https://studio.crazydan.org/donate/alipay.jpg" style={{height: '200px'}}/>
 
 </TCol><TCol>
 
-<img src="/img/donate/wechat.png" style={{height: '200px'}}/>
+<img src="https://studio.crazydan.org/donate/wechat.png" style={{height: '200px'}}/>
+
+</TCol><TCol>
+
+<img src="https://studio.crazydan.org/donate/duzhou.png" style={{height: '200px'}}/>
 
 </TCol></TRow>
 
